@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:48:32 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/08 11:50:59 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/10 11:48:10 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	child_pro(char *file, char *cmd, char **env)
 	int fd;
   	char	*path;
 	char	**command;
+	char	*err;
 
+	//file_err(0, file);
 	fd	= open(file, O_RDONLY);
 	if (fd < 0)
 		file_err(0, file);
@@ -32,7 +34,8 @@ void	child_pro(char *file, char *cmd, char **env)
 	path = cheak_path(*command, path);
 	if (!path)
 	{
-		ft_putstr_fd(ft_strjoin("zsh: command not found: ", cmd), 2);
+		err = ft_strjoin("pipex: ", cmd);
+		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
 		exit(127);
 	}
 	execve(path, command, env);
@@ -44,7 +47,9 @@ void	perent_pro(char *cmd, char *file, char **env)
 	int fd;
   	char	*path;
 	char 	**command;
+	char	*err;
 
+	//file_err(1, file);
 	fd	= open(file, O_WRONLY | O_CREAT, 0666);
 	if (fd == -1)
 		file_err(1, file);
@@ -60,7 +65,8 @@ void	perent_pro(char *cmd, char *file, char **env)
 	path = cheak_path(*command, path);
 	if (!path)
 	{
-		ft_putstr_fd(ft_strjoin("zsh: command not found: ", cmd), 2);
+		err = ft_strjoin("pipex: ", cmd);
+		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
 		exit(127);
 	}
 	execve(path, command, env);
@@ -69,6 +75,7 @@ void	perent_pro(char *cmd, char *file, char **env)
 
 int main(int ac, char *av[], char **env)
 {
+//	int ex;
 	if (ac == 5)
 	{
 		int fd[2];
@@ -90,21 +97,22 @@ int main(int ac, char *av[], char **env)
 			close(fd[1]);
 			child_pro(av[1], av[2], env);
 		}
-		int pid2 = fork();
-		if (pid2 < -1)
-			exit(1);
-		if (pid2 == 0)
-		{
+	//	int pid2 = fork();
+	//	if (pid2 < -1)
+	//		exit(0);
+	//	if (pid2 == 0)
+	//	{
 			dup2(fd[0], 0);
 			close(fd[0]);
 			close(fd[1]);
 			perent_pro(av[3], av[4], env);
-		}
-		close(fd[0]);
-		close(fd[1]);
-		waitpid(pid, NULL, 0);
-		waitpid(pid2, NULL, 0);
+			wait(NULL);
+	//	}
+	//	close(fd[0]);
+	//	close(fd[1]);
+		//waitpid(pid, NULL, 0);
+		//waitpid(pid2, NULL, 0);
 	}
-	return (1);
+	//return (1);
 }
 

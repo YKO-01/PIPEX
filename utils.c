@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 11:16:38 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/08 11:49:21 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:14:53 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,25 +86,37 @@ char	**check_cmd(char **command)
 
 void	file_err(int mode, char *file)
 {
+	char	*err;
 	if (mode == 0)
 	{
 		if (access(file, F_OK) < 0)
 		{
-			ft_putstr_fd(ft_strjoin("zsh: no such file or directory: ", file), 2);
+			err = ft_strjoin("pipex: ", file);
+			ft_putstr_fd(ft_strfree(err, ": no such file or directory\n"), 2);
 			exit(1);
 		}
 		if (access(file, R_OK) < 0)
 		{
-			ft_putstr_fd(ft_strjoin("zsh: permission denied: ", file), 2);
-			exit(0);
+			err = ft_strjoin("pipex: ", file);
+			ft_putstr_fd(ft_strfree(err, ": permission denied\n"), 2);
+			exit(1);
 		}
 	}
-	if (mode == 1)
+	else if (mode == 1)
 	{
 		if (access(file, W_OK) < 0)
 		{
-			ft_putstr_fd(ft_strjoin("zsh: permission denied: ", file), 2);
+			err = ft_strjoin("pipex: ", file);
+			ft_putstr_fd(ft_strfree(err, ": permission denied\n"), 2);
 			exit(1);
 		}
 	}
 }
+
+// void check_script(char *cmd)
+// {
+// 	if (*file == '/' || *file == '.')
+// 	{
+// 		i
+// 	}
+// }
