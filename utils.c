@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 11:16:38 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/10 15:14:53 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:27:48 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*ft_strfree(char *s1, char *s2)
 
 char	*git_path(char	**env)
 {
-	char	*path;
+	t_pipex	ppx;
 	int		i;
 
 	i = -1;
@@ -31,10 +31,10 @@ char	*git_path(char	**env)
 	{
 		if (ft_strncmp(env[i], "PATH", 4) == 0)
 		{
-			path = env[i] + 5;
+			ppx.path = env[i] + 5;
 		}
 	}
-	return (path);
+	return (ppx.path);
 }
 
 char	**split_path(char *path)
@@ -113,10 +113,23 @@ void	file_err(int mode, char *file)
 	}
 }
 
-// void check_script(char *cmd)
-// {
-// 	if (*file == '/' || *file == '.')
-// 	{
-// 		i
-// 	}
-// }
+void	check_script(char *cmd, t_pipex ppx, char **env)
+{
+	int	i;
+	i = 0;
+	//char	**script;
+	if (cmd[i] == '.' && cmd[i + 1] == '/')
+	{
+		if (access(&(cmd[i+2]), F_OK) < 0)
+			exit(1);
+		else if (access(&(cmd[i+2]), X_OK) < 0)
+			exit(126);
+		else
+			ppx.path = cmd;
+	}
+	else
+	{
+		ppx.path = git_path(env);
+		ppx.path = cheak_path(cmd, ppx.path);
+	}
+}

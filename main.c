@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 11:56:30 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/02 08:54:17 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/12 13:21:28 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
+
+
+
+
+
+// int main(int ac, char **av, char **env)
+// {
+	
+// }
+
 
 /*
 int main(int ac, char *av[])
@@ -113,19 +123,19 @@ int main()
 	return 0;
 }*/
 
-int main(int argc, char **argv, char **env) {
- 	(void) argc;
-   	(void) argv;	
-	char	*path;
-	int i = -1;
+// int main(int argc, char **argv, char **env) {
+//  	(void) argc;
+//    	(void) argv;	
+// 	char	*path;
+// 	int i = -1;
 
-	while (env[++i])
-	{
-		if (strncmp(env[i], "PATH", 4) == 0)
-		{
-			path = env[i] + 5;
-			printf("%s\n", path);
-		}
-	}
+// 	while (env[++i])
+// 	{
+// 		if (strncmp(env[i], "PATH", 4) == 0)
+// 		{
+// 			path = env[i] + 5;
+// 			printf("%s\n", path);
+// 		}
+// 	}
 
-}
+// }

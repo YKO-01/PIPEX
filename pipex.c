@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:48:32 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/10 11:48:10 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:30:30 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	child_pro(char *file, char *cmd, char **env)
 {
 	int fd;
-  	char	*path;
+  	t_pipex	ppx;
 	char	**command;
 	char	*err;
 
@@ -24,28 +24,36 @@ void	child_pro(char *file, char *cmd, char **env)
 	if (fd < 0)
 		file_err(0, file);
 	fd = dup2(fd, 0);
-	if (ft_strchr(cmd, 39))
+	command = ft_split(cmd, ' ');
+	if (cmd[0] == '.' && cmd[1] == '/')
 	{
-		command = ft_split(cmd, 39);
-		command = check_cmd(command);
+		if (access(&(cmd[2]), F_OK) < 0)
+			exit(1);
+		else if (access(&(cmd[2]), X_OK) < 0)
+			exit(126);
+		else
+			ppx.path = cmd;
 	}
 	else
-		command = ft_split(cmd, ' ');	path = git_path(env);
-	path = cheak_path(*command, path);
-	if (!path)
+	{
+		ppx.path = git_path(env);
+		ppx.path = cheak_path(*command, ppx.path);
+	}
+	ft_putstr_fd(ppx.path, 2);
+	if (!ppx.path)
 	{
 		err = ft_strjoin("pipex: ", cmd);
 		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
 		exit(127);
 	}
-	execve(path, command, env);
+	execve(ppx.path, command, env);
 	exit(126);
 }
 
 void	perent_pro(char *cmd, char *file, char **env)
 {
 	int fd;
-  	char	*path;
+  	t_pipex	ppx;
 	char 	**command;
 	char	*err;
 
@@ -61,15 +69,15 @@ void	perent_pro(char *cmd, char *file, char **env)
 	}
 	else
 		command = ft_split(cmd, ' ');
-	path = git_path(env);
-	path = cheak_path(*command, path);
-	if (!path)
+	ppx.path = git_path(env);
+	ppx.path = cheak_path(*command, ppx.path);
+	if (!ppx.path)
 	{
 		err = ft_strjoin("pipex: ", cmd);
 		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
 		exit(127);
 	}
-	execve(path, command, env);
+	execve(ppx.path, command, env);
 	exit(126);
 }
 

@@ -6,7 +6,7 @@
 #    By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/02 07:58:55 by ayakoubi          #+#    #+#              #
-#    Updated: 2023/01/09 19:25:28 by ayakoubi         ###   ########.fr        #
+#    Updated: 2023/01/13 15:36:38 by ayakoubi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,24 +16,39 @@ SRC		=	pipex.c ft_printf.c ft_putchar.c ft_putnbr.c \
 			ft_split.c ft_strjoin.c ft_strlen.c ft_substr.c \
 			ft_strchr.c ft_putstr_fd.c utils.c
 
-OBJ		=	$(SRC:.c=.o)
+OBJDIR	= obj
+_OBJ	=	$(SRC:.c=.o)
+OBJ		=	$(patsubst %,$(OBJDIR)/%,$(_OBJ))
+
 
 CC		=	cc
 CFLAGS	=	-Wall -Wextra -Werror
 
+
+
+
 all		:	$(NAME)
 
-%.o		:	%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJDIR)/%.o:%.c
+	@echo "Compiling >>>>>>>> "$<
+	@mkdir -p $(OBJDIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME)	:	$(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	@echo "	===================="
+	@echo "	 Build successful!"
+	@$(CC) $(CFLAGS) $^ -o $@
+	@echo "	====================="
 
 clean	:
-	rm -rf $(OBJ)
+	@echo "====================="
+	@echo "REMOVED OBJECTS"
+	@rm -rf $(OBJDIR)/*.o
+	@rm -rf $(OBJDIR)
 
 fclean	:	clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
+	@echo "====================="
 
 re		:	fclean all
 
