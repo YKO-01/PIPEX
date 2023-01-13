@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:48:32 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/13 15:30:30 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:50:04 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	child_pro(char *file, char *cmd, char **env)
 	if (cmd[0] == '.' && cmd[1] == '/')
 	{
 		if (access(&(cmd[2]), F_OK) < 0)
-			exit(1);
+			exit(127);
 		else if (access(&(cmd[2]), X_OK) < 0)
 			exit(126);
 		else
@@ -84,6 +84,8 @@ void	perent_pro(char *cmd, char *file, char **env)
 int main(int ac, char *av[], char **env)
 {
 //	int ex;
+	if (ac < 5)
+		return (EXIT_FAILURE);
 	if (ac == 5)
 	{
 		int fd[2];
@@ -116,11 +118,11 @@ int main(int ac, char *av[], char **env)
 			perent_pro(av[3], av[4], env);
 			wait(NULL);
 	//	}
-	//	close(fd[0]);
-	//	close(fd[1]);
+		// close(fd[0]);
+		// close(fd[1]);
 		//waitpid(pid, NULL, 0);
 		//waitpid(pid2, NULL, 0);
 	}
-	//return (1);
+	return 0;
 }
 
