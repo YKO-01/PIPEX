@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 11:16:38 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/13 15:27:48 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/14 12:49:59 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,50 @@ char *cheak_path(char *cmd, char *path)
 	return (NULL);
 }
 
+// int check_space(char *str)
+// {
+//     int i;
+//     i = 0;
+//     while (str[i] && str[i] != ' ')
+//         i++;
+//     return (i);
+
+// }
+
+// char	*check_cmd(char	*cmd)
+// {
+// 	int i;
+// 	char	*new;
+// 	char	*cmd;
+// 	char	*last;
+// 	int		j;
+// 	i = 0;
+// 	j = 0;
+	
+// 	i = check_space(cmd);
+// 	new = ft_substr(cmd, 0, i + 1);
+// 	last = ft_substr(cmd, i + 1, ft_strlen(cmd));
+// 	cmd = ft_strfree(cmd, last);
+// 	return (cmd);
+// }
+
+// char	**check_cmd(char **command)
+// {
+// 	int i;
+
+// 	cmd = ft_split(command[0], ' ');
+
+// 	return (cmd);
+// }
+
 char	**check_cmd(char **command)
 {
-	int i;
-	char	*new;
 	char	**cmd;
-	i = 0;
 
-	while (*command && *command[i] != ' ')
-		i++;
-	new = ft_substr(*command, 0, i + 1);
-	cmd = ft_split(new, ' ');
-	new = ft_substr(*command, i + 1, ft_strlen(*command));
-	*cmd = ft_strfree(*cmd, new);
-	int j;
-	j = 0;
-	while (cmd[j])
-		printf("command == > %s", cmd[j++]);
-	return (cmd);
+	cmd = ft_split(command[0], ' ');
+	command[0] = ft_substr(cmd[0], 0, ft_strlen(cmd[0]));
+	//command[1] = ft_substr(command[1], 0, ft_strlen(command[1]));
+	return (command);
 }
 
 void	file_err(int mode, char *file)

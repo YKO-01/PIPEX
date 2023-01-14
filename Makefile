@@ -6,7 +6,7 @@
 #    By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/02 07:58:55 by ayakoubi          #+#    #+#              #
-#    Updated: 2023/01/13 15:36:38 by ayakoubi         ###   ########.fr        #
+#    Updated: 2023/01/14 10:42:33 by ayakoubi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME	=	pipex
 SRC		=	pipex.c ft_printf.c ft_putchar.c ft_putnbr.c \
 			ft_putstr.c ft_putuns.c ft_puthex.c ft_strncmp.c\
 			ft_split.c ft_strjoin.c ft_strlen.c ft_substr.c \
-			ft_strchr.c ft_putstr_fd.c utils.c
+			ft_strchr.c ft_putstr_fd.c utils.c ft_putnbr_fd.c \
+			ft_putchar_fd.c
 
 OBJDIR	= obj
 _OBJ	=	$(SRC:.c=.o)

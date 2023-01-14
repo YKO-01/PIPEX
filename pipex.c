@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:48:32 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/13 15:50:04 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/14 13:00:29 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ void	child_pro(char *file, char *cmd, char **env)
 		file_err(0, file);
 	fd = dup2(fd, 0);
 	command = ft_split(cmd, ' ');
+	if (ft_strchr(cmd, 34))
+	{
+		command = ft_split(cmd, 34);
+		command = check_cmd(command);
+	}
+	if (ft_strchr(cmd, 39))
+	{
+		command = ft_split(cmd, 39);
+		command = check_cmd(command);
+	}
 	if (cmd[0] == '.' && cmd[1] == '/')
 	{
 		if (access(&(cmd[2]), F_OK) < 0)
@@ -39,7 +49,6 @@ void	child_pro(char *file, char *cmd, char **env)
 		ppx.path = git_path(env);
 		ppx.path = cheak_path(*command, ppx.path);
 	}
-	ft_putstr_fd(ppx.path, 2);
 	if (!ppx.path)
 	{
 		err = ft_strjoin("pipex: ", cmd);
@@ -62,13 +71,31 @@ void	perent_pro(char *cmd, char *file, char **env)
 	if (fd == -1)
 		file_err(1, file);
 	fd = dup2(fd, 1);
+	command = ft_split(cmd, ' ');
+	if (ft_strchr(cmd, 34))
+	{
+		command = ft_split(cmd, 34);
+		command = check_cmd(command);
+	}
 	if (ft_strchr(cmd, 39))
 	{
 		command = ft_split(cmd, 39);
 		command = check_cmd(command);
 	}
+	if (cmd[0] == '.' && cmd[1] == '/')
+	{
+		if (access(&(cmd[2]), F_OK) < 0)
+			exit(127);
+		else if (access(&(cmd[2]), X_OK) < 0)
+			exit(126);
+		else
+			ppx.path = cmd;
+	}
 	else
-		command = ft_split(cmd, ' ');
+	{
+		ppx.path = git_path(env);
+		ppx.path = cheak_path(*command, ppx.path);
+	}
 	ppx.path = git_path(env);
 	ppx.path = cheak_path(*command, ppx.path);
 	if (!ppx.path)

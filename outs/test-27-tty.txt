@@ -1,0 +1,2 @@
+pipex: notexisting: command not found
+/bin/cat
