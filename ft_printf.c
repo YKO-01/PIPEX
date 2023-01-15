@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 18:27:37 by ayakoubi          #+#    #+#             */
-/*   Updated: 2022/12/29 13:20:36 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/15 11:46:49 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_printf(const char *format, ...)
 			len = ft_printforma(format, len, ap, i);
 		}
 		else
-			len += write(1, &format[i], 1);
+			len += write(2, &format[i], 1);
 		i++;
 	}
 	va_end(ap);

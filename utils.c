@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 11:16:38 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/14 12:49:59 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/15 14:10:07 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ char	*git_path(char	**env)
 		{
 			ppx.path = env[i] + 5;
 		}
+		// else
+		// {
+		// 	ft_printf("None\n");
+		// 	exit(1);
+		// }
 	}
 	return (ppx.path);
 }
@@ -54,6 +59,11 @@ char *cheak_path(char *cmd, char *path)
 	char *last_path;
 	int i;
 	i = -1;
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK) == 0)
+			return (cmd);
+	}
 	while (new_path[++i])
 	{
 		last_path = ft_strjoin(new_path[i], "/");
@@ -100,31 +110,30 @@ char *cheak_path(char *cmd, char *path)
 // 	return (cmd);
 // }
 
-char	**check_cmd(char **command)
+char	**check_cmd(char **command, char *path, char **env)
 {
 	char	**cmd;
 
 	cmd = ft_split(command[0], ' ');
 	command[0] = ft_substr(cmd[0], 0, ft_strlen(cmd[0]));
+	if (command[1][0] == 39 || command[1][0] == 34)
+			execve(path, command, env);
 	//command[1] = ft_substr(command[1], 0, ft_strlen(command[1]));
 	return (command);
 }
 
 void	file_err(int mode, char *file)
 {
-	char	*err;
 	if (mode == 0)
 	{
 		if (access(file, F_OK) < 0)
 		{
-			err = ft_strjoin("pipex: ", file);
-			ft_putstr_fd(ft_strfree(err, ": no such file or directory\n"), 2);
+			ft_printf("pipex: %s: No such file or directory\n",  file);
 			exit(1);
 		}
 		if (access(file, R_OK) < 0)
 		{
-			err = ft_strjoin("pipex: ", file);
-			ft_putstr_fd(ft_strfree(err, ": permission denied\n"), 2);
+			ft_printf("pipex: %s: permission denied\n", file);
 			exit(1);
 		}
 	}
@@ -132,8 +141,7 @@ void	file_err(int mode, char *file)
 	{
 		if (access(file, W_OK) < 0)
 		{
-			err = ft_strjoin("pipex: ", file);
-			ft_putstr_fd(ft_strfree(err, ": permission denied\n"), 2);
+			ft_printf("pipex: %s: permission denied\n", file);
 			exit(1);
 		}
 	}

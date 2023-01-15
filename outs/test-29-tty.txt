@@ -1,2 +1,0 @@
-pipex: /bin/cat: command not found
-/usr/bin/grep

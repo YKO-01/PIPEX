@@ -6,7 +6,7 @@
 /*   By: ayakoubi <ayakoubi@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:48:32 by ayakoubi          #+#    #+#             */
-/*   Updated: 2023/01/14 13:00:29 by ayakoubi         ###   ########.fr       */
+/*   Updated: 2023/01/15 14:11:38 by ayakoubi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 void	child_pro(char *file, char *cmd, char **env)
 {
 	int fd;
-  	t_pipex	ppx;
+  	t_pipex ppx;
 	char	**command;
-	char	*err;
 
 	//file_err(0, file);
 	fd	= open(file, O_RDONLY);
@@ -28,12 +27,12 @@ void	child_pro(char *file, char *cmd, char **env)
 	if (ft_strchr(cmd, 34))
 	{
 		command = ft_split(cmd, 34);
-		command = check_cmd(command);
+		command = check_cmd(command, ppx.path, env);
 	}
 	if (ft_strchr(cmd, 39))
 	{
 		command = ft_split(cmd, 39);
-		command = check_cmd(command);
+		command = check_cmd(command, ppx.path, env);
 	}
 	if (cmd[0] == '.' && cmd[1] == '/')
 	{
@@ -51,8 +50,7 @@ void	child_pro(char *file, char *cmd, char **env)
 	}
 	if (!ppx.path)
 	{
-		err = ft_strjoin("pipex: ", cmd);
-		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
+		ft_printf("pipex: %s: command not found\n", cmd);
 		exit(127);
 	}
 	execve(ppx.path, command, env);
@@ -62,12 +60,11 @@ void	child_pro(char *file, char *cmd, char **env)
 void	perent_pro(char *cmd, char *file, char **env)
 {
 	int fd;
-  	t_pipex	ppx;
+  	t_pipex ppx;
 	char 	**command;
-	char	*err;
 
 	//file_err(1, file);
-	fd	= open(file, O_WRONLY | O_CREAT, 0666);
+	fd	= open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd == -1)
 		file_err(1, file);
 	fd = dup2(fd, 1);
@@ -75,12 +72,12 @@ void	perent_pro(char *cmd, char *file, char **env)
 	if (ft_strchr(cmd, 34))
 	{
 		command = ft_split(cmd, 34);
-		command = check_cmd(command);
+		command = check_cmd(command, ppx.path, env);
 	}
 	if (ft_strchr(cmd, 39))
 	{
 		command = ft_split(cmd, 39);
-		command = check_cmd(command);
+		command = check_cmd(command, ppx.path, env);
 	}
 	if (cmd[0] == '.' && cmd[1] == '/')
 	{
@@ -96,21 +93,19 @@ void	perent_pro(char *cmd, char *file, char **env)
 		ppx.path = git_path(env);
 		ppx.path = cheak_path(*command, ppx.path);
 	}
-	ppx.path = git_path(env);
-	ppx.path = cheak_path(*command, ppx.path);
 	if (!ppx.path)
 	{
-		err = ft_strjoin("pipex: ", cmd);
-		ft_putstr_fd(ft_strfree(err, ": command not found\n"), 2);
+		ft_printf("pipex: %s: command not found\n", cmd);
 		exit(127);
 	}
 	execve(ppx.path, command, env);
 	exit(126);
 }
 
-int main(int ac, char *av[], char **env)
+int main(int ac, char *av[], char *env[])
 {
 //	int ex;
+
 	if (ac < 5)
 		return (EXIT_FAILURE);
 	if (ac == 5)
@@ -118,13 +113,15 @@ int main(int ac, char *av[], char **env)
 		int fd[2];
 		if (pipe(fd) < 0)
 		{
-			ft_putstr_fd("an error in creating pipe\n", 2);
+			ft_printf("an error in creating pipe\n");
+			//ft_putstr_fd("an error in creating pipe\n", 2);
 			exit(1);
 		}
 		int pid = fork();
 		if (pid < 0)
 		{
-			ft_putstr_fd("an error in creating processe\n", 2);
+			ft_printf("an error in creating processe\n");
+			//ft_putstr_fd("an error in creating processe\n", 2);
 			exit(1);
 		}
 		if (pid == 0)
